@@ -1,16 +1,12 @@
 fun main() {
     fun caloriesByElves(input: List<String>): List<Int> {
-        val (groupedCalories, _) = input.fold(mutableListOf(mutableListOf<String>()) to 0) { (list, elfIndex), string ->
-            if (string.isEmpty()) {
-                val newElfIndex = elfIndex + 1
-                list.add(mutableListOf())
-                list to newElfIndex
-            } else {
-                list[elfIndex].add(string)
-                list to elfIndex
+        return input
+            .joinToString("\n")
+            .split("\n\n")
+            .map { caloriesStrings ->
+                caloriesStrings.split("\n")
+                    .sumOf { string -> string.toInt() }
             }
-        }
-        return groupedCalories.map { strings -> strings.sumOf { it.toInt() } }
     }
 
     fun part1(input: List<String>): Int = caloriesByElves(input).max()
