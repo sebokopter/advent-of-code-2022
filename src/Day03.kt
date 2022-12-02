@@ -6,7 +6,9 @@ fun main() {
 
     val testInput = readInput("Day02_test")
     println("part1(testInput): " + part1(testInput))
+    println("part2(testInput): " + part2(testInput))
     check(part1(testInput) == 24000)
+    check(part2(testInput) == 24000)
 
     val input = readInput("Day02")
     println("part1(input): " + part1(input))
