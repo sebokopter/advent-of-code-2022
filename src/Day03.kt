@@ -13,7 +13,7 @@ fun main() {
 
     fun commonItemByCompartments(it: String): Char {
         val (length, items) = it.length to it
-        assert(length.mod(2) == 0) { "Size $length can not be split equally into two." }
+        assert(length % 2 == 0) { "Size $length can not be split equally into two." }
         val (compartment1, compartment2) = items.chunked(length / 2)
         return compartment1.first { it in compartment2 }
     }
