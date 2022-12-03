@@ -1,7 +1,5 @@
 import Outcome.*
-import Shape.Rock
-import Shape.Paper
-import Shape.Scissors
+import Shape.*
 
 enum class Shape(val value: Int) {
     Rock(1), Paper(2), Scissors(3);
@@ -44,10 +42,10 @@ fun main() {
         else -> error("$outcome cannot be mapped to a Outcome")
     }
 
-    fun part1(input: List<String>): Int = input.fold(0) { total, line ->
+    fun part1(input: List<String>): Int = input.sumOf { line ->
         val (opShape, myShape) = line.split(" ").map(::charToShape)
         val result = outcomeMap.getValue(opShape to myShape).points
-        total + myShape.value + result
+        myShape.value + result
     }
 
     fun findOutMyShape(opShape: Shape, outcome: Outcome): Shape {
@@ -55,11 +53,11 @@ fun main() {
         return possibleGames.keys.toMap().getValue(opShape)
     }
 
-    fun part2(input: List<String>): Int = input.fold(0) { total, line ->
+    fun part2(input: List<String>): Int = input.sumOf { line ->
         val (shapeChar, outcomeChar) = line.split(" ")
         val (opShape, outcome) = charToShape(shapeChar) to charToOutcome(outcomeChar)
         val myShape = findOutMyShape(opShape, outcome)
-        total + myShape.value + outcome.points
+        myShape.value + outcome.points
     }
 
     val testInput = readInput("Day02_test")
