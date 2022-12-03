@@ -4,11 +4,11 @@ fun main() {
      * a..z => 1..26
      * A..Z => 27..52
      */
-    fun priority(commonItem: Char): Int {
-        val codePoint =  if (commonItem.isLowerCase()) commonItem.code - 'a'.code
-        else commonItem.code - 'A'.code + 26
+    fun priority(char: Char): Int {
+        val priority =  if (char.isLowerCase()) char - 'a'
+        else char - 'A' + 26
         //priority starts with 1
-        return codePoint + 1
+        return priority + 1
     }
 
     fun commonItemByCompartments(it: String): Char {
