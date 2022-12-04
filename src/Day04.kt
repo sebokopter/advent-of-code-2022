@@ -20,7 +20,7 @@ open class Day04 {
         val (assignedSections1, assignedSections2) = split(",")
             .map { assignment ->
                 val (begin, end) = assignment.split("-")
-                LongRange(begin.toLong(), end.toLong())
+                begin.toLong()..end.toLong()
             }
         return assignedSections1 to assignedSections2
     }
