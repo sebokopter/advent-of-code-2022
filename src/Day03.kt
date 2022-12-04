@@ -5,7 +5,7 @@ fun main() {
      * A..Z => 27..52
      */
     fun priority(char: Char): Int {
-        val priority =  if (char.isLowerCase()) char - 'a'
+        val priority = if (char.isLowerCase()) char - 'a'
         else char - 'A' + 26
         //priority starts with 1
         return priority + 1
@@ -14,8 +14,8 @@ fun main() {
     fun commonItemByCompartments(it: String): Char {
         val (length, items) = it.length to it
         assert(length % 2 == 0) { "Size $length can not be split equally into two." }
-        val (compartment1, compartment2) = items.chunked(length / 2)
-        return compartment1.first { it in compartment2 }
+        val (compartment1, compartment2) = items.chunked(length / 2) { it.toSet() }
+        return (compartment1 intersect compartment2).first()
     }
 
     fun part1(input: List<String>): Int = input.sumOf { it ->
