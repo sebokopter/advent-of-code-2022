@@ -7,32 +7,28 @@ fun main() {
     fun priority(char: Char): Int {
         val priority = if (char.isLowerCase()) char - 'a'
         else char - 'A' + 26
-        //priority starts with 1
+        //priority index starts with 1
         return priority + 1
     }
 
+    fun findCommonItem(rucksacks: List<Set<Char>>): Char = rucksacks.reduce { rucksack1, rucksack2 ->
+        rucksack1 intersect rucksack2
+    }.single()
+
     fun commonItemByCompartments(it: String): Char {
         val (length, items) = it.length to it
-        assert(length % 2 == 0) { "Size $length can not be split equally into two." }
-        val (compartment1, compartment2) = items.chunked(length / 2) { it.toSet() }
-        return (compartment1 intersect compartment2).first()
+        return findCommonItem(items.chunked(length / 2) { it.toSet() })
     }
 
-    fun part1(input: List<String>): Int = input.sumOf { it ->
-        val commonItem = commonItemByCompartments(it)
-        priority(commonItem)
+    fun part1(input: List<String>): Int = input.sumOf {
+        priority(commonItemByCompartments(it))
     }
 
-    fun commonItemByRucksacks(rucksacks: List<String>): Char {
-        val (rucksack1, rucksack2, rucksack3) = rucksacks
-        return rucksack1.first { it in rucksack2 && it in rucksack3 }
-    }
+    fun commonItemByRucksacks(rucksacks: List<String>): Char = findCommonItem(rucksacks.map { it.toSet() })
 
     fun part2(input: List<String>): Int = input.chunked(3).sumOf { rucksacks ->
-        val commonItem = commonItemByRucksacks(rucksacks)
-        priority(commonItem)
+        priority(commonItemByRucksacks(rucksacks))
     }
-
 
     val testInput = readInput("Day03_test")
     println("part1(testInput): " + part1(testInput))
