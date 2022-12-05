@@ -2,7 +2,7 @@ fun main() {
     data class Rearrangement(val amount: Int, val from: Int, val to: Int)
 
     fun parseRearrangement(line: String): Rearrangement {
-        val regex = "move (\\d+) from (\\d+) to (\\d+)".toRegex()
+        val regex = """\D+(\d+)\D+(\d+)\D+(\d+)""".toRegex()
         val (amount, from, to) = regex.find(line)?.destructured ?: error("could not parse $line")
         return Rearrangement(amount.toInt(), (from.toInt() - 1), (to.toInt() - 1))
     }
@@ -22,8 +22,8 @@ fun main() {
 
         return stacksString.fold(List(stackCount) { ArrayDeque() }) { stacks, line ->
             val potentialStacks = line.chunked(4)
-            potentialStacks.forEachIndexed { stackIndex, potentialStack ->
-                if (potentialStack.isBlank()) return@forEachIndexed
+            for ((stackIndex, potentialStack) in potentialStacks.withIndex()) {
+                if (potentialStack.isBlank()) continue
                 val crateId = potentialStack[1]
                 stacks[stackIndex].addFirst(crateId)
             }
