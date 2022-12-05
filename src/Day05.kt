@@ -1,9 +1,15 @@
 fun main() {
     data class Rearrangement(val amount: Int, val from: Int, val to: Int)
 
+    fun parseRearrangement(line: String): Rearrangement {
+        val regex = "move (\\d+) from (\\d+) to (\\d+)".toRegex()
+        val (amount, from, to) = regex.find(line)?.destructured ?: error("could not parse $line")
+        return Rearrangement(amount.toInt(), (from.toInt() - 1), (to.toInt() - 1))
+    }
+
     fun readPuzzleInput(input: String): List<List<String>> = input.split("\n\n").map { it.lines() }
 
-    fun countStacks(startStacks: String): Int = startStacks.length / 3
+    fun countStacks(stackIndices: String): Int = stackIndices.length / 3
 
     fun separateStackIndices(startStacks: List<String>): Pair<List<String>, String> {
         val (stacks, stackIndices) = startStacks.chunked(startStacks.lastIndex)
@@ -14,12 +20,12 @@ fun main() {
         val (stacksString, stackIndices) = separateStackIndices(stacksPuzzleInput)
         val stackCount = countStacks(stackIndices)
 
-        return stacksString.fold(List(stackCount) { ArrayDeque<Char>() }) { stacks, line ->
+        return stacksString.fold(List(stackCount) { ArrayDeque() }) { stacks, line ->
             val potentialStacks = line.chunked(4)
-            potentialStacks.forEachIndexed { index, potentialStack ->
+            potentialStacks.forEachIndexed { stackIndex, potentialStack ->
                 if (potentialStack.isBlank()) return@forEachIndexed
-                val crateChar = potentialStack[1]
-                stacks[index].addFirst(crateChar)
+                val crateId = potentialStack[1]
+                stacks[stackIndex].addFirst(crateId)
             }
             stacks
         }
@@ -30,42 +36,34 @@ fun main() {
         else topOfStacks
     }
 
-    fun List<String>.asRearrangements(): List<Rearrangement> = map { line ->
-        val regex = "move (\\d+) from (\\d+) to (\\d+)".toRegex()
-        val (amount, from, to) = regex.find(line)?.destructured ?: error("could not parse $line")
-        Rearrangement(amount.toInt(), (from.toInt() - 1), (to.toInt() - 1))
-    }
-
-    fun rearrange(stacks: List<ArrayDeque<Char>>, rearrangementProcess: List<String>) {
-        rearrangementProcess.asRearrangements().forEach { (amount, fromIndex, toIndex) ->
-            repeat(amount) {
-                val stackToMove = stacks[fromIndex].removeLast()
-                stacks[toIndex].add(stackToMove)
-            }
+    fun List<Rearrangement>.rearrange(stacks: List<ArrayDeque<Char>>) = forEach { (amount, fromIndex, toIndex) ->
+        repeat(amount) {
+            val stackToMove = stacks[fromIndex].removeLast()
+            stacks[toIndex].add(stackToMove)
         }
     }
 
-    fun rearrange2(stacks: List<ArrayDeque<Char>>, rearrangementProcess: List<String>) {
-        rearrangementProcess.asRearrangements().forEach { (amount, fromIndex, toIndex) ->
-            val stacksToMove = ArrayDeque<Char>()
-            repeat(amount) {
-                stacksToMove.addFirst(stacks[fromIndex].removeLast())
-            }
-            stacks[toIndex].addAll(stacksToMove)
+    fun List<Rearrangement>.rearrange2(stacks: List<ArrayDeque<Char>>) = forEach { (amount, fromIndex, toIndex) ->
+        val stacksToMove = ArrayDeque<Char>()
+        repeat(amount) {
+            stacksToMove.addFirst(stacks[fromIndex].removeLast())
         }
+        stacks[toIndex].addAll(stacksToMove)
     }
 
     fun part1(input: String): String {
-        val (startStacks, rearrangementProcess) = readPuzzleInput(input)
-        val stacks = parseStacks(startStacks)
-        rearrange(stacks, rearrangementProcess)
+        val (stacksInput, rearrangementInput) = readPuzzleInput(input)
+        val stacks = parseStacks(stacksInput)
+        val rearrangements = rearrangementInput.map(::parseRearrangement)
+        rearrangements.rearrange(stacks)
         return topOfStack(stacks)
     }
 
     fun part2(input: String): String {
-        val (startStacks, rearrangementProcess) = readPuzzleInput(input)
-        val stacks = parseStacks(startStacks)
-        rearrange2(stacks, rearrangementProcess)
+        val (stacksInput, rearrangementInput) = readPuzzleInput(input)
+        val stacks = parseStacks(stacksInput)
+        val rearrangements = rearrangementInput.map(::parseRearrangement)
+        rearrangements.rearrange2(stacks)
         return topOfStack(stacks)
     }
 
