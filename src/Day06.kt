@@ -1,16 +1,30 @@
 fun main() {
 
-    fun part1(input: List<String>): Int = input.size
+    fun findFirstUniqueChars(input: String, uniqueChars: Int): Int {
+        for (i in (uniqueChars-1)..input.lastIndex) {
+            val lastFourChars = input.substring(i - (uniqueChars-1)..i)
+            fun areUnique(lastFourChars: String) = lastFourChars.toSet().size == uniqueChars
+            if (areUnique(lastFourChars)) return i + 1
+        }
+        error("No start-of-packet marker found")
+    }
 
-    fun part2(input: List<String>): Int = input.size
+    fun part1(input: String): Int = findFirstUniqueChars(input, 4)
 
-    val testInput = readInput("Day06_test")
-    println("part1(testInput): " + part1(testInput))
-    println("part2(testInput): " + part2(testInput))
-    check(part1(testInput) == 24000)
-    check(part2(testInput) == 24000)
+    fun part2(input: String): Int = findFirstUniqueChars(input, 14)
 
-    val input = readInput("Day06")
+    readInput("Day06_test_part1").forEach { line ->
+        val (input,solution) = line.split(" ")
+        println("part1(testInput): " + part1(input))
+        check(part1(input) == solution.toInt())
+    }
+    readInput("Day06_test_part2").forEach { line ->
+        val (input,solution) = line.split(" ")
+        println("part2(testInput): " + part2(input))
+        check(part2(input) == solution.toInt())
+    }
+
+    val input = readTextInput("Day06")
     println("part1(input): " + part1(input))
     println("part2(input): " + part2(input))
 }
