@@ -20,3 +20,5 @@ fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest
 operator fun String.component1() = split(" ")[0]
 operator fun String.component2() = split(" ")[1]
 operator fun String.component3() = split(" ")[2]
+
+data class Point(val x: Int, val y: Int)
