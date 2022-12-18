@@ -1,9 +1,5 @@
 import java.util.*
 
-operator fun String.component1() = split(" ")[0]
-operator fun String.component2() = split(" ")[1]
-operator fun String.component3() = split(" ")[2]
-
 const val TOTAL_DISK_SPACE = 70_000_000
 const val REQUIRED_SPACE = 30_000_000
 fun Stack<String>.toAbsolutePath(subDir: String = ""): String {
